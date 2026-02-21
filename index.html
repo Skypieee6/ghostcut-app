@@ -280,7 +280,7 @@
                     // 1. Load Model (Lazy)
                     if (!model || !processor) {
                         loadingText.innerText = "Downloading AI Model...";
-                        loadingSubtext.innerText = "Fetching RMBG-1.4 (170MB). It will stay cached next time.";
+                        loadingSubtext.innerText = "Fetching RMBG-1.4 Optimized Model (40MB). It will stay cached next time.";
 
                         const progressCallback = (info) => {
                             if (info.status === 'progress') {
@@ -296,6 +296,9 @@
                         });
                         model = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
                             progress_callback: progressCallback,
+                            // CRITICAL FIX: Explicitly request the quantized 8-bit ONNX model to save RAM
+                            quantized: true,
+                            dtype: 'q8',
                             config: { model_type: 'custom' }
                         });
                     }
